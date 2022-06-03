@@ -17,7 +17,5 @@ case class Order(
        |Error with order: ${customerName}  Date: ${date} ${items}
        |""".stripMargin
   )
-
   val total: Float = items.map(_.cost).sum
-
 }
