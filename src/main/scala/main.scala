@@ -1,4 +1,3 @@
-import java.time.YearMonth
 import scala.util.{Failure, Success, Try}
 
 object main {
@@ -8,16 +7,12 @@ object main {
       arg0 <- Try(args(0))
       arg1 <- Try(args(1))
     } yield {
+      //      println(arg0 + "-" + arg1)
       for {
         initalDate <- serialization.YearMonth apply arg0
         endDate <- serialization.YearMonth apply arg1
       } yield {
-        println(
-          ShowIntervals.getIntervals(
-            initalDate,
-            new doOrders().makeOrders()
-          )
-        )
+        println(ShowIntervals.getIntervals(initalDate, new doOrders().makeOrders()))
       }
     }
 

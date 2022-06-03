@@ -6,11 +6,11 @@ case class Item(
     product: Product
 ) {
   require(
-    shippingFee < 0 || taxAmount < 0,
+    shippingFee >= 0f || taxAmount >= 0f,
     s"""
        |Error with product with item 
        |${product.name}
-       |The value of ${if (shippingFee < 0) s"Shipping fee: $shippingFee"
+       |The value of ${if (shippingFee < 0f) s"Shipping fee: $shippingFee"
     else s"Tax amount: $taxAmount"} must be equal or greater than 0
        |
        |""".stripMargin

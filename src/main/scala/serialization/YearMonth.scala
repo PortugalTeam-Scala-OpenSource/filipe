@@ -1,16 +1,15 @@
 package serialization
 
-import java.text.SimpleDateFormat
-import scala.util.Try
 import java.time.YearMonth.of
+import scala.util.Try
 
 object YearMonth {
   def apply(date: String) = {
     Try {
-      val df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-      df.setLenient(false)
-      val parsed = df.parse(date)
-      of(parsed.getYear, parsed.getMonth)
+      val year = date.split("-")(0).toInt
+      val month = date.split("-")(1).toInt
+
+      of(year, month)
     }.toOption
   }
 }
