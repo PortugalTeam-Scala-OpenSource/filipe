@@ -30,8 +30,18 @@ class doOrders() {
       new Product("Dell XPS", "Laptop", 2.55f, 599.99f, YearMonth.of(2022, 12))
     val item4: Item = new Item(20.99f, 23.5f, product4)
 
-    val order1 = Order(
-      "John",
+    val product5: Product =
+      new Product("Dell XPS", "Laptop", 2.55f, 599.99f, YearMonth.of(1990, 12))
+    val item5: Item = new Item(20.99f, 23.5f, product5)
+
+    val order = Order("John",
+      123456789,
+      "blabla - porto - 4000",
+      YearMonth.of(1995, 1),
+      List(item5)
+    )
+
+    val order1 = Order("John",
       123456789,
       "blabla - porto - 4000",
       YearMonth.of(2022, 1),
@@ -111,11 +121,12 @@ class doOrders() {
       "Theodore",
       123456789,
       "blabla - porto - 4000",
-      YearMonth.of(2022, 12),
+      YearMonth.of(2023, 12),
       List(item4)
     )
 
     val list = Seq(
+      order,
       order1,
       order2,
       order3,
@@ -130,7 +141,7 @@ class doOrders() {
       order12
     )
 
-//    println(list)
+    //    println(list)
     list
   }
 }
