@@ -1,8 +1,10 @@
+import menu.Interval
 import ShowOrdersInterval.getOrders
 
 import java.time.YearMonth
 import java.util
 import java.util.regex.Pattern
+import scala.util.Try
 
 object ShowIntervals {
 
@@ -14,39 +16,15 @@ object ShowIntervals {
     month
   }
 
-  def getIntervalsWithIntervals(initalDate: YearMonth, endDate: YearMonth, intervalsArg: String, list: Seq[Order]): String = {
+  def getIntervalsWithIntervals(initalDate: YearMonth, endDate: YearMonth, intervalsArg: Seq[Interval], list: Seq[Order]): String = {
 
     val listOrders = getOrders(initalDate, endDate, list)
 
-    val matcher = Pattern.compile("\\d+").matcher(intervalsArg)
 
-    val intervals = new util.ArrayList[Integer]
-    while ( {
-      matcher.find
-    }) intervals.add(Integer.valueOf(matcher.group))
 
-    //    println(intervals)
-    var str: String = new String()
 
-    for (w <- 0 until intervals.size()) {
-      if (w % 2 == 0) {
-        var counter: Int = 0
-        if (w + 1 != intervals.size()) {
-          listOrders.foreach(order => {
-            val space = totalMonths(order.date, initalDate)
 
-            if (space >= intervals.get(w) && space <= intervals.get(w + 1)) {
-              counter += 1
-            }
-          })
-          str += s"${intervals.get(w)}-${intervals.get(w + 1)}: ${counter} \n"
-        }
-      }
-    }
-
-//    println("-" + str + "\n")
-    //    println(str)
-    str.toString
+    "ola"
   }
 
   def getIntervals(initalDate: YearMonth, endDate: YearMonth, list: Seq[Order]): String = {
