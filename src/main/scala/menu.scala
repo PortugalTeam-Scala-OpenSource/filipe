@@ -13,11 +13,11 @@ object menu {
           .map { interval =>
             val startEnd = interval.split("-").map(_.toInt)
             Interval(startEnd(0), startEnd(1))
-          }
-          .toSeq
+          }.toSeq
       }
 
   case class Arguments(initialDate: YearMonth, endDate: YearMonth, interval: Seq[Interval])
+
   case class Arguments2(initialDate: YearMonth, endDate: YearMonth)
 
   def parseArgs(args: Array[String]): Option[Arguments] = {
@@ -55,5 +55,4 @@ object menu {
 
     result
   }
-
 }

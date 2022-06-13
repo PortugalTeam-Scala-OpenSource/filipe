@@ -8,50 +8,35 @@ object ShowIntervals {
   sealed trait MonthsSinceNow
 
   def totalMonths(date: YearMonth, initalDate: YearMonth): Int = {
-    val month = ((date.getYear.intValue * 12 + date.getMonth.getValue) - (initalDate.getYear.intValue() * 12 + initalDate.getMonth.getValue))
-    //        println("Order: " + date + " - IniDate: " + initalDate + " Diference: " + month)
+    val month = (date.getYear.intValue * 12 + date.getMonth.getValue) - (initalDate.getYear.intValue() * 12 + initalDate.getMonth.getValue)
     month
   }
-
 
   def monthsSinceNow(date: YearMonth): Int = {
     val now = YearMonth.now()
     totalMonths(date, now)
   }
 
-
   def getIntervalsWithIntervals(initalDate: YearMonth, endDate: YearMonth, intervalsArg: Seq[Interval], list: Seq[Order]): String = {
 
     val listOrders = getOrders(initalDate, endDate, list)
 
-
     val amountOfOrdersPerInterval = listOrders.map(order => totalMonths(order.date, initalDate)).groupBy(identity).map { case (key, value) => (key, value.size) }.toSeq.sorted
 
-
-    val b: Map[Interval, Int] = amountOfOrdersPerInterval.toSeq
-      .map { case (monthsSinceInitialDate, amountOfOrders) =>
-        intervalsArg.collect {
-          case interval@Interval(startDate, endDate)
-            if monthsSinceInitialDate >= startDate && monthsSinceInitialDate <= endDate =>
-            (interval, amountOfOrders)
-        }
+    val b: Map[Interval, Int] = amountOfOrdersPerInterval.flatMap { case (monthsSinceInitialDate, amountOfOrders) =>
+      intervalsArg.collect {
+        case interval@Interval(startDate, endDate)
+          if monthsSinceInitialDate >= startDate && monthsSinceInitialDate <= endDate =>
+          (interval, amountOfOrders)
       }
-      .flatten
-      .groupMapReduce(_._1)(_._2)(_ + _)
-
-    val c: Map[Interval, Int] = b.filter { case (interval, amount) =>
-      intervalsArg.contains(interval)
-    }
+    }.groupMapReduce(_._1)(_._2)(_ + _)
 
     val str = b.toSeq
       .map { case (Interval(startDate, endDate), amount) =>
         startDate + "-" + endDate + ": " + amount
-      }
-      .sorted
-      .mkString("\n")
-    //    println(str)
-    str
+      }.sorted.mkString("\n")
 
+    str
   }
 
   def getIntervals(initalDate: YearMonth, endDate: YearMonth, list: Seq[Order]): String = {
@@ -88,19 +73,14 @@ object ShowIntervals {
       case (monthsSinceNow, orders) => (monthsSinceNow, orders.size)
     }
 
-    /*        c.toSeq.sortBy {
-              case (monthsSinceNow, orders) => monthsSinceNow.toString
-            }*/
-
     c.map(obj => {
       obj._1 match {
-        case LessThanOneMonth => ("<1: " + obj._2)
-        case OneToThreeMonths => ("1-3: " + obj._2)
-        case FourToSixMonths => ("4-6: " + obj._2)
-        case SevenToTwelveMonths => ("7-12: " + obj._2)
-        case MoreThanTwelveMonths => (">12: " + obj._2)
+        case LessThanOneMonth => "<1: " + obj._2
+        case OneToThreeMonths => "1-3: " + obj._2
+        case FourToSixMonths => "4-6: " + obj._2
+        case SevenToTwelveMonths => "7-12: " + obj._2
+        case MoreThanTwelveMonths => ">12: " + obj._2
       }
     }).mkString("\n")
   }
-
 }

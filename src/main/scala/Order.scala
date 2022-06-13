@@ -10,12 +10,9 @@ case class Order(
   require(
     items.forall { item =>
       val yearMonthOfItem = YearMonth.of(item.date.getYear, item.date.getMonth)
-      (yearMonthOfItem.getYear <= date.getYear && (if (yearMonthOfItem.getYear == date.getYear) yearMonthOfItem.getMonthValue <= date.getMonthValue else true))
+      yearMonthOfItem.getYear <= date.getYear && (if (yearMonthOfItem.getYear == date.getYear) yearMonthOfItem.getMonthValue <= date.getMonthValue else true)
     },
-    s"""
-       |Item creation date must be before order date
-       |Error with order: ${customerName}  Date: ${date} ${items}
-       |""".stripMargin
+    s"\nItem creation date must be before order date\nError with order: $customerName  Date: $date $items\n"
   )
   val total: Float = items.map(_.cost).sum
 }

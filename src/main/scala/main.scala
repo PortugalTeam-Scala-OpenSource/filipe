@@ -1,7 +1,5 @@
-
 object main {
   def main(args: Array[String]): Unit = {
-
 
     val arguments = menu.parseArgs(args)
     if (arguments.isEmpty) {
@@ -14,7 +12,6 @@ object main {
         return
       }
     }
-
     println(ShowIntervals.getIntervalsWithIntervals(arguments.get.initialDate, arguments.get.endDate, arguments.get.interval, new doOrders().makeOrders()))
   }
 }
