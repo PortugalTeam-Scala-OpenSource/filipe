@@ -1,10 +1,7 @@
-import menu.Interval
 import ShowOrdersInterval.getOrders
+import menu.Interval
 
 import java.time.YearMonth
-import java.util
-import java.util.regex.Pattern
-import scala.util.Try
 
 object ShowIntervals {
 
@@ -16,15 +13,45 @@ object ShowIntervals {
     month
   }
 
+
+  def monthsSinceNow(date: YearMonth): Int = {
+    val now = YearMonth.now()
+    totalMonths(date, now)
+  }
+
+
   def getIntervalsWithIntervals(initalDate: YearMonth, endDate: YearMonth, intervalsArg: Seq[Interval], list: Seq[Order]): String = {
 
     val listOrders = getOrders(initalDate, endDate, list)
 
 
+    val amountOfOrdersPerInterval = listOrders.map(order => totalMonths(order.date, initalDate)).groupBy(identity).map { case (key, value) => (key, value.size) }.toSeq.sorted
 
 
+    val b: Map[Interval, Int] = amountOfOrdersPerInterval.toSeq
+      .map { case (monthsSinceInitialDate, amountOfOrders) =>
+        intervalsArg.collect {
+          case interval@Interval(startDate, endDate)
+            if monthsSinceInitialDate >= startDate && monthsSinceInitialDate <= endDate =>
+            (interval, amountOfOrders)
+        }
+      }
+      .flatten
+      .groupMapReduce(_._1)(_._2)(_ + _)
 
-    "ola"
+    val c: Map[Interval, Int] = b.filter { case (interval, amount) =>
+      intervalsArg.contains(interval)
+    }
+
+    val str = b.toSeq
+      .map { case (Interval(startDate, endDate), amount) =>
+        startDate + "-" + endDate + ": " + amount
+      }
+      .sorted
+      .mkString("\n")
+    //    println(str)
+    str
+
   }
 
   def getIntervals(initalDate: YearMonth, endDate: YearMonth, list: Seq[Order]): String = {
